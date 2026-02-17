@@ -32,10 +32,37 @@ The project is organized into strictly defined layers:
 
 ### Prerequisites
 * .NET 8 SDK
-* MySQL Server (Local or Docker)
+* MySQL Server
 
-### 1. Database Setup
-Execute the initialization script in your MySQL instance to create the schema:
+### Installation
 
+1.  **Clone the repository**
+    ```bash
+    git clone [https://github.com/yourusername/MaintainanceAPI.git](https://github.com/yourusername/MaintainanceAPI.git)
+    ```
+
+2.  **Setup the Database**
+    Run the `schema.sql` script located in the root folder on your MySQL instance to create the tables.
+
+3.  **Configure Credentials**
+    Rename `appsettings.example.json` to `appsettings.json` and update the connection string:
+    ```json
+    "ConnectionStrings": {
+      "MySql": "Server=localhost;Database=maintainance_api;User=root;Password=your_password;"
+    }
+    ```
+
+4.  **Run the Application**
+    ```bash
+    dotnet run --project "Maintenance_&_Work_Orders_API.csproj"
+    ```
+
+5.  **Explore the API**
+    Open your browser to `https://localhost:7025/swagger` to see the Swagger UI documentation.
+
+## Running Tests
+
+This project uses xUnit for unit testing.
 ```bash
-mysql -u root -p < schema.sql
+dotnet test
+
