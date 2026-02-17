@@ -1,16 +1,24 @@
-﻿using Maintenance___Work_Orders_API.Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Maintenance___Work_Orders_API.Contracts.Requests
 {
     public class CreateWorkOrderRequest
     {
-        public int AssetID { get; set; }
+        [Range(1, int.MaxValue)]
+        public int AssetId { get; set; }
+
+        [Required]
         public string Title { get; set; } = string.Empty;
-        public string? Description { get; set; } 
-        public string? Priority {  get; set; }
-        public string? Status { get; set; }
-        public DateTime OpenedAt { get; set; }
-        public DateTime ClosedAt { get; set; }
-        public DateTime CreatedAt { get; set; }
+
+        public string? Description { get; set; }
+
+        [Required]
+        public string Priority { get; set; } = string.Empty;
+
+        [Required]
+        public string Status { get; set; } = string.Empty;
+
+        public DateTime? OpenedAt { get; set; }
+        public DateTime? ClosedAt { get; set; }
     }
 }

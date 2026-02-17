@@ -1,17 +1,15 @@
 ﻿using Maintenance___Work_Orders_API.Application.Interfaces;
 using Maintenance___Work_Orders_API.Contracts.Requests;
-using Maintenance___Work_Orders_API.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace Maintenance___Work_Orders_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class WorkOrderController : ControllerBase
-
     {
         private readonly IWorkOrderService _workOrderService;
+
         public WorkOrderController(IWorkOrderService workOrderService)
         {
             _workOrderService = workOrderService;
@@ -23,7 +21,8 @@ namespace Maintenance___Work_Orders_API.Controllers
             var workOrders = _workOrderService.GetAllWorkOrders();
             return Ok(workOrders);
         }
-        [HttpGet("{id}")]
+
+        [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
             var workOrder = _workOrderService.GetWorkOrderById(id);
@@ -31,6 +30,7 @@ namespace Maintenance___Work_Orders_API.Controllers
             {
                 return NotFound();
             }
+
             return Ok(workOrder);
         }
 
@@ -38,18 +38,32 @@ namespace Maintenance___Work_Orders_API.Controllers
         public IActionResult Post([FromBody] CreateWorkOrderRequest workOrder)
         {
             _workOrderService.CreateWorkOrder(workOrder);
-            return CreatedAtAction(nameof(Get),workOrder);
+            return StatusCode(StatusCodes.Status201Created, workOrder);
         }
-        [HttpPut("{id}/status")]
-        public IActionResult UpdateWorkOrderStatus(int id, string status)
-        { 
-            _workOrderService.UpdateWorkOrderStatus(id, status);
+
+        [HttpPut("{id:int}/status")]
+        public IActionResult UpdateWorkOrderStatus(int id, [FromBody] UpdateWorkOrderStatusRequest request)
+        {
+            var existingWorkOrder = _workOrderService.GetWorkOrderById(id);
+            if (existingWorkOrder == null)
+            {
+                return NotFound();
+            }
+
+            _workOrderService.UpdateWorkOrderStatus(id, request.Status);
             return NoContent();
         }
-        [HttpPost("{id}/logs")]
-        public IActionResult AddLogMessage(int id, string message)
+
+        [HttpPost("{id:int}/logs")]
+        public IActionResult AddLogMessage(int id, [FromBody] AddWorkOrderLogRequest request)
         {
-            _workOrderService.AddLogMessage(id, message);
+            var existingWorkOrder = _workOrderService.GetWorkOrderById(id);
+            if (existingWorkOrder == null)
+            {
+                return NotFound();
+            }
+
+            _workOrderService.AddLogMessage(id, request.Message);
             return NoContent();
         }
     }

@@ -97,12 +97,13 @@ public class SqlAssetRepo : ISqlAssetRepo
         connection.Execute(sql,
             new
             {
+                Id = assetId,
                 AssetTag = asset.AssetTag,
                 PlateNo = asset.PlateNo,
                 Make = asset.Make,
                 Model = asset.Model,
                 Status = asset.Status,
-                CreatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow
             });
     }
     public void DeleteAsset(int assetId)

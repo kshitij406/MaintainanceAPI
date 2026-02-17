@@ -7,10 +7,12 @@ namespace Maintenance___Work_Orders_API.Application.Services
     public class WorkOrderService : IWorkOrderService
     {
         private readonly ISqlWorkOrderRepo _workOrderRepo;
+
         public WorkOrderService(ISqlWorkOrderRepo workOrderRepo)
         {
             _workOrderRepo = workOrderRepo;
         }
+
         public IEnumerable<WorkOrder> GetAllWorkOrders()
         {
             return _workOrderRepo.GetAllWorkOrders();
@@ -30,18 +32,19 @@ namespace Maintenance___Work_Orders_API.Application.Services
                 throw new ArgumentException("Invalid work order priority");
 
             _workOrderRepo.CreateWorkOrder(workOrder);
-
         }
 
         public void UpdateWorkOrderStatus(int workOrderId, string status)
         {
+            if (!Enum.TryParse<WorkOrderStatus>(status, ignoreCase: true, out _))
+                throw new ArgumentException("Invalid work order status");
+
             _workOrderRepo.UpdateWorkOrderStatus(workOrderId, status);
         }
 
-        public void AddLogMessage(int workOrderId,  string message)
+        public void AddLogMessage(int workOrderId, string message)
         {
             _workOrderRepo.AddLogMessage(workOrderId, message);
         }
-
     }
 }
