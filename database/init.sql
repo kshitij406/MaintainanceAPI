@@ -1,0 +1,38 @@
+﻿CREATE DATABASE IF NOT EXISTS maintainance_api;
+USE maintainance_api;
+
+-- 1. Create Assets Table
+CREATE TABLE IF NOT EXISTS assets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    asset_tag VARCHAR(50) NOT NULL UNIQUE,
+    plate_no VARCHAR(20) NULL,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'Active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Create Work Orders Table
+CREATE TABLE IF NOT EXISTS work_orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    asset_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NULL,
+    priority VARCHAR(20) NOT NULL DEFAULT 'Medium',
+    status VARCHAR(20) NOT NULL DEFAULT 'Open',
+    opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_workorder_asset FOREIGN KEY (asset_id) REFERENCES assets(id) ON DELETE CASCADE
+);
+
+-- 3. Create Work Order Logs Table
+CREATE TABLE IF NOT EXISTS work_order_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    work_order_id INT NOT NULL,
+    message TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_log_workorder FOREIGN KEY (work_order_id) REFERENCES work_orders(id) ON DELETE CASCADE
+);

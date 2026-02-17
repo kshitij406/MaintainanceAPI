@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="MaintenanceAPI.Tests/MaintenanceAPI.Tests.csproj" />
   <Project Path="Maintenance_&amp;_Work_Orders_API.csproj" />
 </Solution>

@@ -69,30 +69,11 @@ namespace Maintenance___Work_Orders_API.Infrastructure.Repository
             connection.Open();
 
             const string sql = """
-            INSERT INTO work_orders (
-                asset_id,
-                title,
-                description,
-                priority,
-                status,
-                opened_at,
-                closed_at,
-                created_at,
-                updated_at
-            )
-            VALUES (
-                @AssetId,
-                @Title,
-                @Description,
-                @Priority,
-                @Status,
-                @OpenedAt,
-                @ClosedAt,
-                @CreatedAt,
-            );
-        """;
+                INSERT INTO work_orders (asset_id, title, description, priority, status, opened_at, closed_at, created_at)
+                VALUES (@AssetId, @Title, @Description, @Priority, @Status, @OpenedAt, @ClosedAt, @CreatedAt);
+            """;
 
-            
+
             connection.Execute( sql,
                 new
                 {
@@ -134,14 +115,8 @@ namespace Maintenance___Work_Orders_API.Infrastructure.Repository
                 VALUES (@WorkOrderId, @Message, @CreatedAt);
                 ";
 
-                connection.Execute(sql,
-                    new
-                    {
-                        Id = workOrderId,
-                        Message = message,
-                        CreatedAt = DateTime.Now
-                    });
-            }
+                connection.Execute(sql, new { WorkOrderId = workOrderId, Message = message, CreatedAt = DateTime.Now });
+        }
 
           
         }
