@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Maintenance___Work_Orders_API.Application.Interfaces;
+﻿using Maintenance___Work_Orders_API.Application.Interfaces;
 using Maintenance___Work_Orders_API.Contracts.Requests;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Maintenance___Work_Orders_API.Controllers
 {
@@ -9,6 +9,7 @@ namespace Maintenance___Work_Orders_API.Controllers
     public class AssetController : ControllerBase
     {
         private readonly IAssetService _assetService;
+
         public AssetController(IAssetService assetService)
         {
             _assetService = assetService;
@@ -20,7 +21,8 @@ namespace Maintenance___Work_Orders_API.Controllers
             var assets = _assetService.GetAllAssets();
             return Ok(assets);
         }
-        [HttpGet("{id}")]
+
+        [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
             var asset = _assetService.GetAssetById(id);
@@ -28,6 +30,7 @@ namespace Maintenance___Work_Orders_API.Controllers
             {
                 return NotFound();
             }
+
             return Ok(asset);
         }
 
@@ -35,9 +38,10 @@ namespace Maintenance___Work_Orders_API.Controllers
         public IActionResult Post([FromBody] CreateAssetRequest asset)
         {
             _assetService.CreateAsset(asset);
-            return CreatedAtAction(nameof(Get), asset);
+            return StatusCode(StatusCodes.Status201Created, asset);
         }
-        [HttpPut("{id}")]
+
+        [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] UpdateAssetRequest asset)
         {
             var existingAsset = _assetService.GetAssetById(id);
@@ -45,10 +49,12 @@ namespace Maintenance___Work_Orders_API.Controllers
             {
                 return NotFound();
             }
+
             _assetService.UpdateAsset(id, asset);
             return NoContent();
         }
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
             var existingAsset = _assetService.GetAssetById(id);
@@ -56,6 +62,7 @@ namespace Maintenance___Work_Orders_API.Controllers
             {
                 return NotFound();
             }
+
             _assetService.DeleteAsset(id);
             return NoContent();
         }

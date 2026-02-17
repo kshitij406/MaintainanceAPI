@@ -6,7 +6,7 @@ namespace Maintenance___Work_Orders_API.Application.Services
 {
     public class AssetService : IAssetService
     {
-        public ISqlAssetRepo _sqlAssetRepo;
+        private readonly ISqlAssetRepo _sqlAssetRepo;
         public AssetService(ISqlAssetRepo sqlAssetRepo)
         {
             _sqlAssetRepo = sqlAssetRepo;
@@ -28,6 +28,9 @@ namespace Maintenance___Work_Orders_API.Application.Services
         }
         public void UpdateAsset(int assetId, UpdateAssetRequest asset)
         {
+            if (!Enum.TryParse<AssetStatus>(asset.Status, ignoreCase: true, out _))
+                throw new ArgumentException("Invalid asset status");
+
             _sqlAssetRepo.UpdateAsset(assetId, asset);
         }
         public void DeleteAsset(int assetId) 
