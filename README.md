@@ -1,116 +1,162 @@
 # Maintenance & Work Orders API
 
-A portfolio-ready ASP.NET Core Web API for managing assets and maintenance work orders.
-This backend is designed to power a React Native mobile app with clean JSON endpoints, clear domain boundaries, and practical service/repository separation.
-
-## Why this project is resume-ready
-
-- **Real-world domain**: assets, work orders, status lifecycle, and maintenance logs.
-- **Practical architecture**: Domain → Application → Infrastructure → API layers.
-- **Production-minded choices**: MySQL + Dapper, request validation, health check endpoint, Swagger docs.
-- **Test coverage starter**: unit tests for service-level business rules.
+A robust, production-ready ASP.NET Core Web API for managing vehicle fleets, maintenance work orders, fuel logging, and service scheduling. Built with clean Layered Architecture and high-performance data access via Dapper.
 
 ---
 
-## Tech stack
+## Key Features
 
-- **.NET 8 / ASP.NET Core Web API**
-- **Dapper** for SQL data access
-- **MySQL** (`MySqlConnector`)
-- **xUnit + Moq** for unit tests
-- **Swagger / OpenAPI** for API exploration
+### Asset Management
+- Track vehicles/assets with Make, Model, License Plate, and Odometer details
+- Manage asset lifecycles with statuses: `Active`, `Inactive`, and `Maintenance`
+- Assign drivers to specific assets
+
+### Work Order System
+- Create and manage maintenance tickets (Work Orders)
+- **Priority Handling:** `Low`, `Medium`, `High` classification
+- **Status Workflow:** `Open` → `In Progress` → `Closed`
+- **Activity Logs:** Append timestamped log messages for full audit trails
+
+### Fuel Tracking
+- Log fuel entries linking Drivers, Assets, and Costs
+- Automatically updates the asset's odometer reading upon fuel entry
+- Calculate total costs based on liters and price per liter
+
+### Preventative Maintenance (Service Schedules)
+- Schedule recurring services (e.g., "Oil Change", "Tire Rotation")
+- **Smart Logic:** Automatically identifies overdue services by date or odometer mileage
+- Full history tracking for completed services
+
+### Dashboard & Analytics
+Aggregated statistics for the frontend dashboard:
+- Total & Active Assets
+- Assets currently in Maintenance
+- Open & High-Priority Work Orders
 
 ---
 
-## Project structure
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | .NET 8 (ASP.NET Core Web API) |
+| Language | C# |
+| Database | MySQL 8.0+ |
+| Data Access | Dapper (Micro-ORM) |
+| DB Driver | MySqlConnector |
+| Testing | xUnit + Moq |
+| Documentation | Swagger / OpenAPI |
+
+---
+
+## Architecture
 
 ```text
-Controllers/         # API endpoints
-Application/         # Service layer + interfaces
-Infrastructure/      # DB connection + SQL repositories
-Domain/              # Core models + enums
-Contracts/Requests/  # Request DTOs
-database/init.sql    # Schema bootstrap script
-MaintenanceAPI.Tests # Unit tests
+├── Application/           # Business Logic & Interfaces (Service Layer)
+├── Contracts/             # DTOs (Requests & Responses)
+├── Controllers/           # API Endpoints (Presentation Layer)
+├── Domain/                # Core Entities & Enums
+├── Infrastructure/        # Database Repositories & Dapper Implementations
+├── MaintenanceAPI.Tests/  # Unit Tests
+└── database/              # SQL Initialization Scripts
 ```
 
 ---
 
-## API overview
+## Database Schema
 
-Base URL: `https://localhost:7025`
-
-### Assets
-
-- `GET /api/asset` - list assets
-- `GET /api/asset/{id}` - get a specific asset
-- `POST /api/asset` - create asset
-- `PUT /api/asset/{id}` - update asset
-- `DELETE /api/asset/{id}` - delete asset
-
-### Work Orders
-
-- `GET /api/workorder` - list work orders
-- `GET /api/workorder/{id}` - get a specific work order
-- `POST /api/workorder` - create a work order
-- `PUT /api/workorder/{id}/status` - update status (`Open`, `InProgress`, `Closed`)
-- `POST /api/workorder/{id}/logs` - append work order log message
-
-### Health
-
-- `GET /api/health` - validates database connectivity
+| Table | Description |
+|---|---|
+| `assets` | Core entity for vehicles |
+| `drivers` | Linked to assets (One-to-Many) |
+| `work_orders` | Maintenance tickets linked to assets |
+| `work_order_logs` | History of actions on a work order |
+| `fuel_logs` | Tracks fuel consumption and cost |
+| `service_schedules` | Tracks preventative maintenance rules |
 
 ---
 
-## Setup
+## Getting Started
 
-## 1) Prerequisites
+### Prerequisites
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
+- MySQL Server
 
-- .NET 8 SDK
-- MySQL 8+ (or compatible MariaDB)
-
-## 2) Clone
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/MaintainanceAPI.git
+git clone https://github.com/yourusername/MaintainanceAPI.git
 cd MaintainanceAPI
 ```
 
-## 3) Initialize database
+### 2. Database Setup
 
-Run the SQL script:
+A SQL script is provided to initialize the schema and seed demo data.
 
 ```bash
 mysql -u root -p < database/init.sql
 ```
 
-## 4) Configure app settings
+> This creates the `maintainance_api` database and populates it with sample assets, drivers, and work orders.
 
-Create `appsettings.json` from `appsettings.example.json` and set:
+### 3. Configuration
+
+Rename `appsettings.example.json` to `appsettings.json` and update your connection string:
 
 ```json
 {
   "ConnectionStrings": {
-    "MySql": "Server=localhost;Database=maintainance_api;User=root;Password=your_password;"
-  }
+    "MySql": "Server=localhost;Port=3306;Database=maintainance_api;User Id=root;Password=your_password;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
 }
 ```
 
-## 5) Run API
+### 4. Run the Application
 
 ```bash
-dotnet run --project "Maintenance_&_Work_Orders_API.csproj"
+dotnet run --project "FleetManagementApi.csproj"
 ```
 
-Swagger UI:
+### 5. Explore the API
 
-- `https://localhost:7025/swagger`
+Once running, open Swagger UI to test endpoints interactively:
+
+```
+http://localhost:5276/swagger
+```
+
+> Port may vary — check your console output.
 
 ---
 
 ## Testing
 
+Unit tests cover the Service layer using **xUnit** and **Moq**, ensuring business logic validity without hitting the database.
+
 ```bash
 dotnet test
 ```
 
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/dashboard` | Get high-level stats for the home screen |
+| `GET` | `/api/health` | Check database connectivity |
+| `GET` | `/api/asset` | List all assets |
+| `POST` | `/api/asset` | Register a new vehicle |
+| `PUT` | `/api/asset/{id}/assign-driver/{driverId}` | Assign a driver to a vehicle |
+| `GET` | `/api/workorder` | List all maintenance tickets |
+| `POST` | `/api/workorder/{id}/logs` | Add a comment/log to a ticket |
+| `GET` | `/api/serviceschedule/overdue` | Get list of vehicles with overdue service |
+| `POST` | `/api/fuellog` | Log fuel entry & auto-update odometer |
+```
