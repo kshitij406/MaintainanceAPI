@@ -20,4 +20,11 @@
         Inactive, 
         Maintenance 
     }
+
+    public enum DriverStatus
+    {
+        Available,
+        Unavailable,
+        OnLeave
+    }
 }

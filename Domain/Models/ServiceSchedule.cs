@@ -8,6 +8,6 @@
         public DateTime? LastServiceDate { get; set; }
         public int LastServiceOdometer { get; set; }
         public DateTime? NextDueDate { get; set; }
-        public DateTime? NextDueOdometer { get; set; }
+        public int? NextDueOdometer { get; set; }
     }
 }

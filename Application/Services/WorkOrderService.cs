@@ -46,5 +46,6 @@ namespace Maintenance___Work_Orders_API.Application.Services
         {
             _workOrderRepo.AddLogMessage(workOrderId, message);
         }
+        
     }
 }

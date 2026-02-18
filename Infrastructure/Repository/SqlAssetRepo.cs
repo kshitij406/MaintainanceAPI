@@ -47,9 +47,11 @@ public class SqlAssetRepo : ISqlAssetRepo
         make AS Make,
         model AS Model,
         status AS Status,
+        odometer AS Odometer,
+        current_driver_id AS CurrentDriverId
         created_at AS CreatedAt,
         updated_at AS UpdatedAt
-        current_driver_id AS CurrentDriverId
+        
         FROM Assets
         WHERE id = @Id";
 
@@ -64,9 +66,9 @@ public class SqlAssetRepo : ISqlAssetRepo
         connection.Open();
 
         const string sql = @"
-            INSERT INTO Assets (asset_tag, plate_no, make, model, status, current_driver_id)
+            INSERT INTO Assets (asset_tag, plate_no, make, model, status, odometer, current_driver_id)
             VALUES 
-            (@AssetTag, @PlateNo, @Make, @Model, @Status, @CurrentDriverId);";
+            (@AssetTag, @PlateNo, @Make, @Model, @Status, @Odometer, @CurrentDriverId);";
 
         connection.Execute(sql,
                     new
@@ -76,6 +78,7 @@ public class SqlAssetRepo : ISqlAssetRepo
                         Make = asset.Make,
                         Model = asset.Model,
                         Status = asset.Status,
+                        Odometer = asset.Odometer,
                         CurrentDriverId = asset.CurrentDriverId
                     }); 
     }
@@ -92,8 +95,9 @@ public class SqlAssetRepo : ISqlAssetRepo
                 make = @Make,
                 model = @Model,
                 status = @Status,
+                odometer = @Odometer,
+                current_driver_id = @CurrentDriverId ,
                 updated_at = @UpdatedAt
-                current_driver_id = @CurrentDriverId 
             WHERE id = @Id
         ";
         
@@ -106,8 +110,9 @@ public class SqlAssetRepo : ISqlAssetRepo
                 Make = asset.Make,
                 Model = asset.Model,
                 Status = asset.Status,
+                Odometer = asset.Odometer,
+                CurrentDriverId = asset.CurrentDriverId,
                 UpdatedAt = DateTime.UtcNow,
-                CurrentDriverId = asset.CurrentDriverId
             });
     }
     public void DeleteAsset(int assetId)
@@ -123,5 +128,45 @@ public class SqlAssetRepo : ISqlAssetRepo
             });
 
     }
-    
+
+    public void AssignDriver(int assetId, int driverId)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        connection.Open();
+        const string sql = @"
+            UPDATE Assets
+            SET current_driver_id = @DriverId,
+                updated_at = @UpdatedAt
+            WHERE id = @AssetId
+        ";
+        connection.Execute(sql,
+            new
+            {
+                AssetId = assetId,
+                DriverId = driverId,
+                UpdatedAt = DateTime.UtcNow
+            });
+
+        const string updateDriverSql = @"
+            UPDATE Drivers
+            SET status = 'Active'
+            WHERE id = @DriverId
+        ";
+
+        connection.Execute(updateDriverSql, new { DriverId = driverId });
+    }
+
+    public int CountAssets()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        return connection.ExecuteScalar<int>("SELECT COUNT(*) FROM assets");
+    }
+
+    public int CountAssetsByStatus(string status)
+    {
+        using var connection = _connectionFactory.CreateConnection();
+        string sql = "SELECT COUNT(*) FROM assets WHERE status = @Status";
+        return connection.ExecuteScalar<int>(sql, new { Status = status });
+    }
+
 }

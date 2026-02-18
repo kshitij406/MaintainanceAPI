@@ -17,6 +17,10 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<ISqlAssetRepo, SqlAssetRepo>();
 builder.Services.AddScoped<IWorkOrderService, WorkOrderService>();
 builder.Services.AddScoped<ISqlWorkOrderRepo, SqlWorkOrderRepo>();
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<ISqlDriverRepo, SqlDriverRepo>();
+builder.Services.AddScoped<IFuelLogService, FuelLogService>();
+builder.Services.AddScoped<ISqlFuelLogRepo, SqlFuelLogRepo>();
 
 builder.Services.AddSingleton<IDbConnectionFactory, MySqlConnectionFactory>();
 

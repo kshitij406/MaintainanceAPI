@@ -38,5 +38,13 @@ namespace Maintenance___Work_Orders_API.Application.Services
             _sqlAssetRepo.DeleteAsset(assetId);
         }
 
+        public void AssignDriver(int assetId, int driverId)
+        {
+            var asset = _sqlAssetRepo.GetAssetById(assetId);
+            if (asset == null) throw new KeyNotFoundException("Asset not found");
+
+            _sqlAssetRepo.AssignDriver(assetId, driverId);
+        }
+
     }
 }

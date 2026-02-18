@@ -7,9 +7,10 @@
         public string? PlateNo { get; set; }
         public string Make { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
-        public string? Status { get; set; }
+        public string Status { get; set; } = "Active";
+        public int Odometer { get; set; } 
+        public int? CurrentDriverId { get; set; } 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int CurrentDriverId { get; set; }
     }
 }

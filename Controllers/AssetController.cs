@@ -66,5 +66,17 @@ namespace Maintenance___Work_Orders_API.Controllers
             _assetService.DeleteAsset(id);
             return NoContent();
         }
+
+        [HttpPut("{id:int}/assign-driver/{driverId:int}")]
+        public IActionResult AssignDriver(int id, int driverId)
+        {
+            var existingAsset = _assetService.GetAssetById(id);
+            if (existingAsset == null)
+            {
+                return NotFound();
+            }
+            _assetService.AssignDriver(id, driverId);
+            return NoContent();
+        }
     }
 }

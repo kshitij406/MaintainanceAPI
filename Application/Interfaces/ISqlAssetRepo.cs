@@ -10,5 +10,8 @@ namespace Maintenance___Work_Orders_API.Application.Interfaces
         void CreateAsset(CreateAssetRequest asset);
         void UpdateAsset(int assetId, UpdateAssetRequest asset);
         void DeleteAsset(int assetId);
+        void AssignDriver(int assetId, int driverId);
+        int CountAssets();
+        int CountAssetsByStatus(string status);
     }
 }

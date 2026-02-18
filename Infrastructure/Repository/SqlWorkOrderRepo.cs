@@ -118,5 +118,19 @@ namespace Maintenance___Work_Orders_API.Infrastructure.Repository
                 CreatedAt = DateTime.UtcNow
             });
         }
+
+        public int CountOpenWorkOrders()
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            string sql = "SELECT COUNT(*) FROM work_orders WHERE status IN ('Open', 'InProgress')";
+            return connection.ExecuteScalar<int>(sql);
+        }
+
+        public int CountHighPriorityWorkOrders()
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            string sql = "SELECT COUNT(*) FROM work_orders WHERE priority = 'High' AND status != 'Closed'";
+            return connection.ExecuteScalar<int>(sql);
+        }
     }
 }

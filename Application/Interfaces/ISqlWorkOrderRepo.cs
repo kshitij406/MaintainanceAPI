@@ -10,5 +10,7 @@ namespace Maintenance___Work_Orders_API.Application.Interfaces
         void CreateWorkOrder(CreateWorkOrderRequest workOrder);
         void UpdateWorkOrderStatus(int workOrderId, string status);
         void AddLogMessage(int workOrderId, string message);
+        int CountOpenWorkOrders();
+        int CountHighPriorityWorkOrders();
     }
 }
