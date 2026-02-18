@@ -20,6 +20,17 @@ builder.Services.AddScoped<ISqlWorkOrderRepo, SqlWorkOrderRepo>();
 
 builder.Services.AddSingleton<IDbConnectionFactory, MySqlConnectionFactory>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMobileApp",
+        policy =>
+        {
+            policy.AllowAnyOrigin() // For development only
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,7 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowMobileApp");
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

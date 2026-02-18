@@ -2,6 +2,7 @@ using Maintenance___Work_Orders_API.Application.Interfaces;
 using Maintenance___Work_Orders_API.Application.Services;
 using Maintenance___Work_Orders_API.Contracts.Requests;
 using Moq;
+using Xunit;
 
 namespace MaintenanceAPI.Tests;
 
