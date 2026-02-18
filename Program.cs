@@ -21,6 +21,8 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<ISqlDriverRepo, SqlDriverRepo>();
 builder.Services.AddScoped<IFuelLogService, FuelLogService>();
 builder.Services.AddScoped<ISqlFuelLogRepo, SqlFuelLogRepo>();
+builder.Services.AddScoped<IServiceScheduleService, ServiceScheduleService>();
+builder.Services.AddScoped<ISqlServiceScheduleRepo, SqlServiceScheduleRepo>();
 
 builder.Services.AddSingleton<IDbConnectionFactory, MySqlConnectionFactory>();
 
