@@ -28,6 +28,7 @@ public class SqlAssetRepo : ISqlAssetRepo
                 status AS Status,
                 created_at AS CreatedAt,
                 updated_at AS UpdatedAt
+                current_driver_id AS CurrentDriverId
             FROM Assets;
             ";
 
@@ -48,6 +49,7 @@ public class SqlAssetRepo : ISqlAssetRepo
         status AS Status,
         created_at AS CreatedAt,
         updated_at AS UpdatedAt
+        current_driver_id AS CurrentDriverId
         FROM Assets
         WHERE id = @Id";
 
@@ -62,9 +64,9 @@ public class SqlAssetRepo : ISqlAssetRepo
         connection.Open();
 
         const string sql = @"
-            INSERT INTO Assets (asset_tag, plate_no, make, model, status, created_at)
+            INSERT INTO Assets (asset_tag, plate_no, make, model, status, current_driver_id)
             VALUES 
-            (@AssetTag, @PlateNo, @Make, @Model, @Status, @CreatedAt);";
+            (@AssetTag, @PlateNo, @Make, @Model, @Status, @CurrentDriverId);";
 
         connection.Execute(sql,
                     new
@@ -74,7 +76,7 @@ public class SqlAssetRepo : ISqlAssetRepo
                         Make = asset.Make,
                         Model = asset.Model,
                         Status = asset.Status,
-                        CreatedAt = DateTime.UtcNow
+                        CurrentDriverId = asset.CurrentDriverId
                     }); 
     }
 
@@ -91,6 +93,7 @@ public class SqlAssetRepo : ISqlAssetRepo
                 model = @Model,
                 status = @Status,
                 updated_at = @UpdatedAt
+                current_driver_id = @CurrentDriverId 
             WHERE id = @Id
         ";
         
@@ -103,7 +106,8 @@ public class SqlAssetRepo : ISqlAssetRepo
                 Make = asset.Make,
                 Model = asset.Model,
                 Status = asset.Status,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                CurrentDriverId = asset.CurrentDriverId
             });
     }
     public void DeleteAsset(int assetId)

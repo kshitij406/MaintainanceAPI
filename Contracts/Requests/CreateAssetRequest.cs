@@ -17,5 +17,7 @@ namespace Maintenance___Work_Orders_API.Contracts.Requests
 
         [Required]
         public string Status { get; set; } = string.Empty;
+
+        public int? CurrentDriverId { get; set; }
     }
 }
