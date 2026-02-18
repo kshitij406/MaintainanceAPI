@@ -146,7 +146,7 @@ dotnet test
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
